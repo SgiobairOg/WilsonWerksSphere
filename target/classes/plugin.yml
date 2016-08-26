@@ -1,0 +1,14 @@
+name: wwSpheres
+main: io.github.sgiobairog.wwspheres.wwSpheres
+version: 0.1
+author: SgiobairOg
+commands:
+   wws_test:
+      description: This is a test command.
+      usage: wws_test
+   wws_man:
+      description: Gives player a guide book for the WilsonWerks Shapes plugin.
+      usage: wws_man
+   wws_circle:
+      description: This is a test command.
+      usage: wws_circle <int radius> <String axis> <String x> <String y> <String z> <String block> [<String dataValue>]
