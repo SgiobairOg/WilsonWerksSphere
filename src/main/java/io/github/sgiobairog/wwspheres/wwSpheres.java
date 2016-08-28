@@ -31,29 +31,28 @@ public final class wwSpheres extends JavaPlugin {
 		//circle Command
 		if (cmd.getName().equalsIgnoreCase("wws_circle")) { 
 			
-	      // wws_circle <int radius> <String axis> <String x> <String y> <String z> <String block> <String dataValue>
+	      // wws_circle <double radius> <String axis> <String x> <String y> <String z> <String block> <String dataValue>
 			if( args.length >= 6 ) {
-				int radius = Integer.parseInt(args[0]);
+				double radius = Double.parseDouble(args[0]);
 				String axis = args[1];
 				Location origin = composeOrigin( args[2], args[3], args[4], player);
 				Material block = Material.matchMaterial(args[5]);
 				String dataValue = "0";
-				List<Hashtable<String, Integer>> points = new ArrayList<Hashtable<String, Integer>>();
-				
-				
-				sender.sendMessage("Targeting origin: " + origin + " with radius " + radius + " along the " + axis + " axis" );
+				List<Hashtable<String, Double>> points = new ArrayList<Hashtable<String, Double>>();
 				
 				if( args.length >= 7 ) {
 					dataValue = args[6];
 				}
 				
-				sender.sendMessage("Circle will be made of " + block + " with datavalue " + dataValue);
 				points = getCircle(sender, radius, origin, axis);
 				
 				if( points != null ) {
 					int i = 0;
 					while (i < points.size()) {
-						Block tempBlock = origin.getWorld().getBlockAt(points.get(i).get("x"), points.get(i).get("y"), points.get(i).get("z"));
+						int x = Integer.valueOf((int) Math.round(points.get(i).get("x")));
+						int y = Integer.valueOf((int) Math.round(points.get(i).get("y")));
+						int z = Integer.valueOf((int) Math.round(points.get(i).get("z")));
+						Block tempBlock = origin.getWorld().getBlockAt(x,y,z);
 						tempBlock.setType(block);
 						i++;
 					}
@@ -94,29 +93,29 @@ public final class wwSpheres extends JavaPlugin {
 		if( x.indexOf("~") > -1 ) { //Parse as a relative x coordinate
 			origin.setX( origin.getX() + Integer.parseInt(x.substring(x.indexOf("~")+1)));
 		} else { //Parse as an absolute coordinate
-			origin.setX(Integer.parseInt(x));
+			origin.setX(Double.parseDouble(x));
 		}
 		
 		//Parse y coordinate
 		if( y.indexOf("~") > -1 ) { //Parse as a relative y coordinate
 			origin.setY( origin.getY() + Integer.parseInt(y.substring(y.indexOf("~")+1)));
 		} else { //Parse as an absolute coordinate
-			origin.setY(Integer.parseInt(y));
+			origin.setY(Double.parseDouble(y));
 		}
 		
 		//Parse z coordinate
 		if( z.indexOf("~") > -1 ) { //Parse as a relative z coordinate
 			origin.setZ( origin.getZ() + Integer.parseInt(z.substring(z.indexOf("~")+1)));
 		} else { //Parse as an absolute coordinate
-			origin.setZ(Integer.parseInt(z));
+			origin.setZ(Double.parseDouble(z));
 		}
 		
 		return origin;
 	}
 	
-	public List<Hashtable<String, Integer>> getCircle(CommandSender sender, int radius, Location origin, String axis ) {
+	public List<Hashtable<String, Double>> getCircle(CommandSender sender, Double radius, Location origin, String axis ) {
 		//Variables
-		List<Hashtable<String, Integer>> points = new ArrayList<Hashtable<String, Integer>>();
+		List<Hashtable<String, Double>> points = new ArrayList<Hashtable<String, Double>>();
 		int blocksToSet = 0;
 		
 		//Constants
@@ -146,15 +145,15 @@ public final class wwSpheres extends JavaPlugin {
 		return points;
 	}
 	
-	public static List<Hashtable<String, Integer>> drawCircleOnX( int radius, Location origin ) {
+	public static List<Hashtable<String, Double>> drawCircleOnX( Double radius, Location origin ) {
 		
-		List<Hashtable<String, Integer>> points = new ArrayList<Hashtable<String, Integer>>();
-		int xO = (int) origin.getX();
-		int yO = (int) origin.getY();
-		int zO = (int) origin.getZ();
-		int y = radius;
-		int z = 0;
-		int err = 0;
+		List<Hashtable<String, Double>> points = new ArrayList<Hashtable<String, Double>>();
+		double xO = (double) origin.getX();
+		double yO = (double) origin.getY();
+		double zO = (double) origin.getZ();
+		double y = radius;
+		double z = 0;
+		double err = 0.5;
 		
 		while ( y >= z ) {
 			points.add( gridHash(xO, yO + y, zO + z));
@@ -178,15 +177,15 @@ public final class wwSpheres extends JavaPlugin {
 		return points;
 	}
 	
-	public static List<Hashtable<String, Integer>> drawCircleOnY( int radius, Location origin ) {
+	public static List<Hashtable<String, Double>> drawCircleOnY( Double radius, Location origin ) {
 		
-		List<Hashtable<String, Integer>> points = new ArrayList<Hashtable<String, Integer>>();
-		int xO = (int) origin.getX();
-		int yO = (int) origin.getY();
-		int zO = (int) origin.getZ();
-		int x = radius;
-		int z = 0;
-		int err = 0;
+		List<Hashtable<String, Double>> points = new ArrayList<Hashtable<String, Double>>();
+		double xO = (double) origin.getX();
+		double yO = (double) origin.getY();
+		double zO = (double) origin.getZ();
+		double x = radius;
+		double z = 0;
+		double err = 0.5;
 		
 		while ( x >= z ) {
 			points.add( gridHash(xO + x, yO, zO + z ));
@@ -210,15 +209,15 @@ public final class wwSpheres extends JavaPlugin {
 		return points;
 	}
 
-	public static List<Hashtable<String, Integer>> drawCircleOnZ( int radius, Location origin ) {
+	public static List<Hashtable<String, Double>> drawCircleOnZ( Double radius, Location origin ) {
 		
-		List<Hashtable<String, Integer>> points = new ArrayList<Hashtable<String, Integer>>();
-		int xO = (int) origin.getX();
-		int yO = (int) origin.getY();
-		int zO = (int) origin.getZ();
-		int x = radius;
-		int y = 0;
-		int err = 0;
+		List<Hashtable<String, Double>> points = new ArrayList<Hashtable<String, Double>>();
+		double xO = origin.getX();
+		double yO = origin.getY();
+		double zO = origin.getZ();
+		double x = radius;
+		double y = 0;
+		double err = .5;
 		
 		while ( x >= y ) {
 			points.add( gridHash(xO + x, yO + y, zO ));
@@ -261,11 +260,11 @@ public final class wwSpheres extends JavaPlugin {
 		return book;
 	}
 	
-	public static Hashtable<String, Integer> gridHash( int x, int y, int z) {
-		Hashtable<String, Integer> newBlock = new Hashtable<String, Integer>();
-		newBlock.put("x", x);
-		newBlock.put("y", y);
-		newBlock.put("z", z);
+	public static Hashtable<String, Double> gridHash( double d, double e, Double zO) {
+		Hashtable<String, Double> newBlock = new Hashtable<String, Double>();
+		newBlock.put("x", d);
+		newBlock.put("y", e);
+		newBlock.put("z", zO);
 		
 		return newBlock;
 	}
